@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+
+    <img id="img" src="cycling.jpg"/>
+    <canvas id="canvas"></canvas>
+
+    <script>
+    const img = document.getElementById('img');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext("2d");
+
+    cocoSsd.load().then(model => {
+        model.detect(img).then(predictions => {
+            console.log('Predictions: ', predictions);
+            console.log(img.width, img.height);
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            context.drawImage(img, 0, 0);
+            for(let i=0; i<predictions.length; i++){
+                context.beginPath();
+                context.lineWidth = 1;
+                context.strokeStyle = "#2fff00";
+                context.rect(...predictions[i].bbox);
+                context.stroke();
+            }
+        });
+    });
+    </script>
+</body>
+</html>
